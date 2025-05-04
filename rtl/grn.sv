@@ -14,7 +14,7 @@ module grn
 #(parameter DATA_WIDTH = 8)
 (
     input logic clk,
-    input logic seed
+    input logic seed,
     output logic [DATA_WIDTH-1:0] out
     );
 

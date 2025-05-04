@@ -20,12 +20,13 @@
 `timescale 1ns / 1ps
 
 module top
-import typedefs::*;
+import typedefs_pkg::*;
 #(
     parameter COLOR_CODEFY_W = 2,
-    parameter ADDR_WIDTH = 5,
+    parameter ADDR_WIDTH = 5
 )
 (
+    input logic rst_n,
     input logic clk,
     input logic mode_button,
     input logic difficulty_button,
@@ -36,7 +37,7 @@ import typedefs::*;
     output logic led_green,
     output logic led_blue,
     output logic led_yellow,
-    output logic [ADDR_WIDTH-1:0] lcd_display,
+    output logic [ADDR_WIDTH-1:0] lcd_display
 );
 
 
@@ -59,11 +60,11 @@ logic seed;
 
 //counters
 logic rst_sequence_counter;
-logic sequence_index;
+logic [ADDR_WIDTH-1:0]sequence_index;
 logic inc_sequence_index;
 
 logic rst_match_counter;
-logic match_index;
+logic [ADDR_WIDTH-1:0]match_index;
 logic inc_match_index;
 
 logic rst_score;
@@ -108,7 +109,7 @@ register #(.DATA_WIDTH(COLOR_CODEFY_W)) speed_register(
     .out(speed)
 );
 
-register #(.DATA_WIDTH(COLOR_CODEFY_W)) player_input(
+register #(.DATA_WIDTH(COLOR_CODEFY_W)) player_input_register(
     .data(player_button),
     .enable(player_wr),
     .out(player_input)
@@ -118,7 +119,7 @@ grn #(.DATA_WIDTH(COLOR_CODEFY_W)) grn
 (
     .clk(clk),
     .seed(seed),
-    .out(random_out),
+    .out(random_out)
 );
 
 mux #(.DATA_WIDTH(COLOR_CODEFY_W)) mux_sequence_input (
@@ -156,7 +157,8 @@ mux #(.DATA_WIDTH(ADDR_WIDTH)) mux_addr (
     .out(addr)
 );
 
-fsm_sequence_control #(.WORD_WIDTH(COLOR_CODEFY_W)) controller(
+controller #(.DIFICULTY_WIDTH(COLOR_CODEFY_W), .DATA_WIDTH(COLOR_CODEFY_W), .ADDR_WIDTH(ADDR_WIDTH)) controller(
+    .rst_n(rst_n),
     .clk(clk),                 
     .player_input(player_input),
     .difficulty(difficulty), 
@@ -171,7 +173,7 @@ fsm_sequence_control #(.WORD_WIDTH(COLOR_CODEFY_W)) controller(
     .mem_rd(mem_rd),
     .mem_wr(mem_wr),
     .inc_match_index(inc_match_index),
-    .inc_sequence_index(inc_match_index),
+    .inc_sequence_index(inc_sequence_index),
     .inc_score(inc_score),
     .rst_match(rst_match),
     .rst_sequence(rst_sequence),

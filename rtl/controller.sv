@@ -14,8 +14,10 @@ module controller
     import typedefs_pkg::*;
 #(
     parameter DATA_WIDTH = 4,
-    parameter DIFICULTY_WIDTH = 2
+    parameter DIFICULTY_WIDTH = 2,
+    parameter ADDR_WIDTH = 5
 )(
+    input logic rst_n,
     input logic clk,                                 // clk
     input logic [DATA_WIDTH-1:0] player_input,       // Input player_input
     input logic [DIFICULTY_WIDTH-1:0] difficulty,    // Input difficulty
@@ -68,16 +70,17 @@ module controller
             end
             DEFEAT: 
                 next_state = IDLE;
-            EVALUATE: 
+            EVALUATE: begin
                 next_state = VICTORY;
-                if(sequence_index < difficulty_index) next_state = GET_NEXT_SEQUENCE_ITEM;
+                if(sequence_index < difficulty) next_state = GET_NEXT_SEQUENCE_ITEM;
+            end
             VICTORY: next_state = IDLE;
         endcase
     end
 
     always_ff @(posedge clk, negedge rst_n) begin : proc_stage
         if(!rst_n) begin
-            state <= INST_ADDR;
+            state <= IDLE;
         end else begin 
             state <= next_state;
         end
@@ -105,11 +108,11 @@ module controller
             end
             GET_NEXT_SEQUENCE_ITEM: begin
                 mem_wr = 1;
-                inc_sequence_index =1
+                inc_sequence_index =1;
             end
             SHOW_SEQUENCE: begin
                 mem_rd = 1;
-                match_index += 1;
+                inc_match_index = 1;
                 enable_led = 1;
                 if(match_index == sequence_index) begin 
                     rst_match = 1;
@@ -126,7 +129,7 @@ module controller
                 end
             end
             DEFEAT: 
-                allleds = 1;
+                all_leds = 1;
             EVALUATE: begin
                 rst_match = 1;
                 if(sequence_index < (8<< difficulty)) begin 

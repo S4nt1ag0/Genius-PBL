@@ -10,13 +10,15 @@ cyan='\033[0;36m'
 clear='\033[0m'  # Clear the color after that
 
 
+# Set current directory
+GIT_ROOT=$(git rev-parse --show-toplevel)
 
+# Define output directory (run this script from the build/ folder)
+cd "$GIT_ROOT/build" || exit 1
 
 # Check if clean is requested
 check_clean() {
-    # Set current directory
-    CURRENT_DIR=$(dirname "$0")
-    find ${CURRENT_DIR}/../build -type f ! -name '*.md' ! -name '*.wcfg' -exec rm -f {} +
+    find ./ -type f ! -name '*.md' ! -name '*.wcfg' -exec rm -f {} +
     echo "Cleaned all files in build directory except *.md and *.wcfg"
 }
 
@@ -52,8 +54,7 @@ error_exit() {
 parse_params() {
     # Set default value for TEST_NAME
     TEST_NAME="adder_basic_test"  
-    # Set current directory
-    CURRENT_DIR=$(dirname "$0")   
+
     options=$(getopt -a --longoptions help,clean,top:,name_of_test:,vivado: -n "xrun" -- ${0} "${@}")
     eval set -- "$options"
     while true; do
@@ -107,9 +108,9 @@ main() {
         error_exit "No top name provided!"
     fi
 
-    echo ${CURRENT_DIR}
+    #echo ${CURRENT_DIR}
     # Generate source list path
-    list=$("${CURRENT_DIR}/srclist2path.sh" "${CURRENT_DIR}/../srclist/${TOP_NAME}.srclist")
+    list=$("../bin/srclist2path.sh" "../srclist/${TOP_NAME}.srclist")
     echo "${list}"
 
     # Run simulation
