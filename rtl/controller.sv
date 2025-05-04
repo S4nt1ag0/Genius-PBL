@@ -38,7 +38,8 @@ module controller
     output logic rst_sequence,
     output logic rst_score,
     output logic enable_led,
-    output logic all_leds 
+    output logic all_leds,
+    output logic load_seed
 );
 
     state_t state = IDLE, next_state;
@@ -98,12 +99,14 @@ module controller
         rst_sequence = 0;
         enable_led = 0;
         inc_score = 0;
+        load_seed = 0;
 
         case (state)
             IDLE: begin 
                 settings_wr = 1;
                 rst_match = 1;
                 rst_sequence = 1;
+                load_seed = 1;
             end
             GET_NEXT_SEQUENCE_ITEM: begin
                 mem_wr = 1;

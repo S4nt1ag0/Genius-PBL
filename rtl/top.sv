@@ -54,9 +54,10 @@ logic [COLOR_CODEFY_W-1:0] difficulty;
 logic speed;
 logic [COLOR_CODEFY_W-1:0] player_input;
 
-//grn
+//rng
 logic [COLOR_CODEFY_W-1:0] random_out;
-logic seed;
+logic [15:0] seed_value;
+logic load_seed; 
 
 //counters
 logic rst_sequence_counter;
@@ -73,7 +74,6 @@ logic inc_score;
 //fsm
 logic settings_wr;
 logic player_wr;
-
 logic addr_mux;
 logic load_ac;
 logic load_ir;
@@ -115,10 +115,19 @@ register #(.DATA_WIDTH(COLOR_CODEFY_W)) player_input_register(
     .out(player_input)
 );
 
-grn #(.DATA_WIDTH(COLOR_CODEFY_W)) grn
+
+seed_generate #(.SEED_WIDTH(LFSR_WIDTH)) seed_gen (
+    .clk(clk),
+    .rst_n(rst_n),
+    .load_seed(load_seed),
+    .seed_out(seed_value)
+);
+
+rng #(.LFSR_WIDTH(LFSR_WIDTH), .DATA_OUT_WIDTH(COLOR_CODEFY_W)) rng
 (
     .clk(clk),
-    .seed(seed),
+    .seed(seed_value),
+    .load_seed(load_seed),
     .out(random_out)
 );
 
@@ -179,7 +188,8 @@ controller #(.DIFICULTY_WIDTH(COLOR_CODEFY_W), .DATA_WIDTH(COLOR_CODEFY_W), .ADD
     .rst_sequence(rst_sequence),
     .rst_score(rst_score),
     .enable_led(enable_led),
-    .all_leds(all_leds)
+    .all_leds(all_leds),
+    .load_seed(load_seed)
 );
 
 endmodule
