@@ -38,7 +38,6 @@ module controller
     output logic rst_sequence,
     output logic rst_score,
     output logic enable_led,
-    output logic update_score,
     output logic all_leds 
 );
 
@@ -98,7 +97,7 @@ module controller
         rst_match = 0;
         rst_sequence = 0;
         enable_led = 0;
-        update_score = 0;
+        inc_score = 0;
 
         case (state)
             IDLE: begin 
@@ -125,7 +124,7 @@ module controller
             COMPARISON: begin
                 inc_match_index += 1;
                 if(player_input != sequence_item)begin 
-                    update_score = 1;
+                    inc_score = 1;
                 end
             end
             DEFEAT: 

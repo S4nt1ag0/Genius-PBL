@@ -29,7 +29,7 @@ import typedefs_pkg::*;
     input logic rst_n,
     input logic clk,
     input logic mode_button,
-    input logic difficulty_button,
+    input logic [COLOR_CODEFY_W-1:0] difficulty_button,
     input logic speed_button,
     input logic [COLOR_CODEFY_W-1:0] player_button,
     input logic start,
@@ -50,12 +50,12 @@ logic [ADDR_WIDTH-1:0] addr;
 
 //registers
 logic mode;
-logic difficulty;
+logic [COLOR_CODEFY_W-1:0] difficulty;
 logic speed;
-logic player_input;
+logic [COLOR_CODEFY_W-1:0] player_input;
 
 //grn
-logic random_out;
+logic [COLOR_CODEFY_W-1:0] random_out;
 logic seed;
 
 //counters
@@ -91,7 +91,7 @@ memory_module #(.ADDR_WIDTH(ADDR_WIDTH),.DATA_WIDTH(COLOR_CODEFY_W)) memory
 );
 
 
-register #(.DATA_WIDTH(COLOR_CODEFY_W)) mode_register(
+register mode_register(
     .data(mode_button),
     .enable(settings_wr),
     .out(mode)
@@ -103,7 +103,7 @@ register #(.DATA_WIDTH(COLOR_CODEFY_W)) difficulty_register(
     .out(difficulty)
 );
 
-register #(.DATA_WIDTH(COLOR_CODEFY_W)) speed_register(
+register speed_register(
     .data(speed_button),
     .enable(settings_wr),
     .out(speed)

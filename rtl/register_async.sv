@@ -11,7 +11,7 @@
 `timescale 1ns / 1ps
 
 module register
-#(parameter DATA_WIDTH = 8)
+#(parameter DATA_WIDTH = 1)
 (
     input logic [DATA_WIDTH-1 :0] data,
     input logic enable,
