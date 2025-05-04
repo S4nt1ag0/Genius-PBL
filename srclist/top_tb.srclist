@@ -7,3 +7,4 @@ rtl/memory.sv
 rtl/mux.sv
 rtl/register_async.sv
 rtl/top.sv
+tb/top_tb.sv
