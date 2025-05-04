@@ -31,13 +31,13 @@ module controller
     output logic mem_wr,
     output logic inc_match_index,
     output logic inc_sequence_index,
-    output logic sequence_wr,
+    output logic inc_score,
     output logic rst_match,
     output logic rst_sequence,
+    output logic rst_score,
     output logic enable_led,
-    output logic update_score
-
-    
+    output logic update_score,
+    output logic all_leds 
 );
 
     state_t state = IDLE, next_state;
@@ -92,7 +92,6 @@ module controller
         mem_wr = 0;
         inc_match_index = 0;
         inc_sequence_index = 0;
-        sequence_wr = 0;
         rst_match = 0;
         rst_sequence = 0;
         enable_led = 0;
@@ -106,27 +105,37 @@ module controller
             end
             GET_NEXT_SEQUENCE_ITEM: begin
                 mem_wr = 1;
-                inc_sequence_index +=1
+                inc_sequence_index =1
             end
             SHOW_SEQUENCE: begin
                 mem_rd = 1;
-                match_index += 1; 
-                //fim da exibição
+                match_index += 1;
+                enable_led = 1;
+                if(match_index == sequence_index) begin 
+                    rst_match = 1;
+                end
             end
             GET_PLAYER_INPUT: begin 
-                if(player_input) next_state = COMPARISON;
+                player_wr = 1;
+                mem_rd = 1;
             end
             COMPARISON: begin
-                next_state = GET_PLAYER_INPUT;
-                if(player_input != sequence_item) next_state = DEFEAT;
-                else if (player_input == sequence_item && match_index == sequence_index) next_state = EVALUATE;
+                inc_match_index += 1;
+                if(player_input != sequence_item)begin 
+                    update_score = 1;
+                end
             end
             DEFEAT: 
-                next_state = IDLE;
-            EVALUATE: 
-                next_state = VICTORY;
-                if(sequence_index < difficulty_index) next_state = GET_NEXT_SEQUENCE_ITEM;
-            VICTORY: next_state = IDLE;
+                allleds = 1;
+            EVALUATE: begin
+                rst_match = 1;
+                if(sequence_index < (8<< difficulty)) begin 
+                    inc_sequence_index = 1;
+                end
+            end
+            VICTORY: begin
+                all_leds = 1;
+            end
         endcase   
     end
 
