@@ -39,10 +39,14 @@ module controller
     output logic rst_score,
     output logic enable_led,
     output logic all_leds,
-    output logic load_seed
+    output logic load_seed,
+    output logic [ADDR_WIDTH-1:0] sequence_indice,
+    output logic [ADDR_WIDTH-1:0] match_indice,
+    output logic mux_addr
 );
 
     state_t state = IDLE, next_state;
+    
     
 
     always_comb begin: process_next_state
@@ -53,10 +57,10 @@ module controller
             end
             GET_NEXT_SEQUENCE_ITEM: begin
                 next_state = SHOW_SEQUENCE;
-                if(mode && sequence_index > 1) next_state = GET_PLAYER_INPUT;
+                if(mode && sequence_indice > 1) next_state = GET_PLAYER_INPUT;
             end
             SHOW_SEQUENCE: begin
-                if(match_index == sequence_index) begin 
+                if(match_indice == sequence_indice) begin 
                     next_state = EVALUATE;
                 end
             end
@@ -66,13 +70,13 @@ module controller
             COMPARISON: begin
                 next_state = GET_PLAYER_INPUT;
                 if(player_input != sequence_item) next_state = DEFEAT;
-                else if (player_input == sequence_item && match_index == sequence_index) next_state = EVALUATE;
+                else if (player_input == sequence_item && match_indice == sequence_indice) next_state = EVALUATE;
             end
             DEFEAT: 
                 next_state = IDLE;
             EVALUATE: begin
                 next_state = VICTORY;
-                if(sequence_index < difficulty) next_state = GET_NEXT_SEQUENCE_ITEM;
+                if(sequence_indice < difficulty) next_state = GET_NEXT_SEQUENCE_ITEM;
             end
             VICTORY: next_state = IDLE;
         endcase
@@ -95,29 +99,30 @@ module controller
         mem_wr = 0;
         inc_match_index = 0;
         inc_sequence_index = 0;
-        rst_match = 0;
-        rst_sequence = 0;
         enable_led = 0;
         inc_score = 0;
         load_seed = 0;
-
+        mux_addr = 0;
         case (state)
             IDLE: begin 
                 settings_wr = 1;
-                rst_match = 1;
-                rst_sequence = 1;
+                rst_match = 0;
+                rst_sequence = 0;
                 load_seed = 1;
+                sequence_indice = 0;
+                match_indice = 0;
             end
             GET_NEXT_SEQUENCE_ITEM: begin
                 mem_wr = 1;
-                inc_sequence_index =1;
+                sequence_indice = sequence_indice + 1;
             end
             SHOW_SEQUENCE: begin
+                mux_addr = 1;
                 mem_rd = 1;
-                inc_match_index = 1;
+                match_indice = match_indice +1;
                 enable_led = 1;
-                if(match_index == sequence_index) begin 
-                    rst_match = 1;
+                if(match_indice == sequence_indice) begin 
+                    match_indice = 0;
                 end
             end
             GET_PLAYER_INPUT: begin 
@@ -125,7 +130,7 @@ module controller
                 mem_rd = 1;
             end
             COMPARISON: begin
-                inc_match_index += 1;
+                match_indice = match_indice + 1;
                 if(player_input != sequence_item)begin 
                     inc_score = 1;
                 end
@@ -133,9 +138,9 @@ module controller
             DEFEAT: 
                 all_leds = 1;
             EVALUATE: begin
-                rst_match = 1;
-                if(sequence_index < (8<< difficulty)) begin 
-                    inc_sequence_index = 1;
+                rst_match = 0;
+                if(sequence_indice < (8<< difficulty)) begin 
+                    sequence_indice = sequence_indice + 1;
                 end
             end
             VICTORY: begin

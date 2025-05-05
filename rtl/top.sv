@@ -80,6 +80,9 @@ logic load_ir;
 logic load_pc;
 logic inc_pc;
 
+logic [ADDR_WIDTH-1:0]sequence_indice;
+logic [ADDR_WIDTH-1:0]match_indice;
+
 memory_module #(.ADDR_WIDTH(ADDR_WIDTH),.DATA_WIDTH(COLOR_CODEFY_W)) memory
 (
     .clk      (clk      ),
@@ -160,8 +163,8 @@ counter #(.DATA_WIDTH(ADDR_WIDTH)) score_counter (
 );
 
 mux #(.DATA_WIDTH(ADDR_WIDTH)) mux_addr (
-    .in_a(match_index),
-    .in_b(sequence_index),
+    .in_a(match_indice),
+    .in_b(sequence_indice),
     .sel_b(addr_mux),
     .out(addr)
 );
@@ -189,7 +192,10 @@ controller #(.DIFICULTY_WIDTH(COLOR_CODEFY_W), .DATA_WIDTH(COLOR_CODEFY_W), .ADD
     .rst_score(rst_score),
     .enable_led(enable_led),
     .all_leds(all_leds),
-    .load_seed(load_seed)
+    .load_seed(load_seed),
+    .sequence_indice(sequence_indice),
+    .match_indice(match_indice),
+    .mux_addr(addr_mux)
 );
 
 endmodule

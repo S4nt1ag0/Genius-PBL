@@ -25,6 +25,7 @@ module counter
         else begin
             if(enable)
                 count <= count+1;
+            else count <= count;
         end
                 
     end
