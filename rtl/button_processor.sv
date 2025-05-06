@@ -40,10 +40,12 @@ module button_processor (
         end 
         else if (player_wr) begin //read only when the FSM allow
             buttons_prev <= buttons_raw;
-            buttons_pressed <= (~buttons_prev) & buttons_raw;
-        end
-        else begin
-            buttons_pressed <= 4'b0000; 
+            if (buttons_raw != buttons_prev) begin
+                buttons_pressed <= (~buttons_prev) & buttons_raw;
+            end
+            else if (buttons_raw == 4'b0000) begin
+                buttons_pressed <= 4'b0000;
+            end    
         end
     end
 

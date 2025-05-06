@@ -53,12 +53,13 @@ module top_tb;
   );
 
   // Task to simulate a button press with edge detection
-  task press_color_button(input logic btn);
+  task automatic press_color_button(ref logic btn);
     begin
       btn = 1;       // Press button
       #30;           // Hold for enough cycles to be detected
       btn = 0;       // Release button
       #20;
+      $display("Button Pressed...");
     end
   endtask
 
@@ -91,11 +92,11 @@ module top_tb;
     start = 1;
     #20;
     start = 0;
-    #100;
+    #30;
 
     // Wait for sequence display
     $display("Waiting for sequence display...");
-    #200;
+    #20;
 
     // Test case 2: Correct sequence input
     $display("Simulating correct sequence input...");

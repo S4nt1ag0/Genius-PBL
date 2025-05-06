@@ -204,7 +204,8 @@ controller #(.DIFICULTY_WIDTH(COLOR_CODEFY_W), .DATA_WIDTH(COLOR_CODEFY_W), .ADD
     .enable_led(enable_led),
     .all_leds(all_leds),
     .load_seed(load_seed),
-    .mux_addr_sequence(mux_addr_sequence)
+    .mux_addr_sequence(mux_addr_sequence),
+    .button_player_pressed(input_valid)
 );
 
 endmodule

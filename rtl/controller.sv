@@ -27,6 +27,7 @@ module controller
     input logic [DATA_WIDTH-1:0] sequence_item,
     input logic [ADDR_WIDTH-1:0] match_index,
     input logic [ADDR_WIDTH-1:0] sequence_index,
+    input logic button_player_pressed,
     output logic settings_wr,
     output logic player_wr,
     output logic mem_rd,
@@ -58,7 +59,7 @@ module controller
                 if(mode && sequence_index > 1) next_state = GET_PLAYER_INPUT;
             end
             SHOW_SEQUENCE: begin
-                if(match_index == sequence_index) begin 
+                if(match_index > sequence_index) begin 
                     next_state = CLEAN_SEQUENCE;
                 end
             end
@@ -66,7 +67,7 @@ module controller
                 next_state = GET_PLAYER_INPUT;
             end
             GET_PLAYER_INPUT: begin 
-                if(player_input) next_state = COMPARISON;
+                if(button_player_pressed) next_state = COMPARISON;
             end
             COMPARISON: begin
                 next_state = GET_PLAYER_INPUT;
@@ -115,7 +116,7 @@ module controller
             end
             GET_NEXT_SEQUENCE_ITEM: begin
                 mem_wr = 1;
-                inc_sequence_index = 1;
+                //inc_sequence_index = 1;
                 mux_addr_sequence = 1;
             end
             SHOW_SEQUENCE: begin
