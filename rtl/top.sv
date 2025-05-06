@@ -74,14 +74,11 @@ logic inc_score;
 //fsm
 logic settings_wr;
 logic player_wr;
-logic addr_mux;
+logic mux_addr_sequence;
 logic load_ac;
 logic load_ir;
 logic load_pc;
 logic inc_pc;
-
-logic [ADDR_WIDTH-1:0]sequence_indice;
-logic [ADDR_WIDTH-1:0]match_indice;
 
 memory_module #(.ADDR_WIDTH(ADDR_WIDTH),.DATA_WIDTH(COLOR_CODEFY_W)) memory
 (
@@ -163,9 +160,9 @@ counter #(.DATA_WIDTH(ADDR_WIDTH)) score_counter (
 );
 
 mux #(.DATA_WIDTH(ADDR_WIDTH)) mux_addr (
-    .in_a(match_indice),
-    .in_b(sequence_indice),
-    .sel_b(addr_mux),
+    .in_a(match_index),
+    .in_b(sequence_index),
+    .sel_b(mux_addr_sequence),
     .out(addr)
 );
 
@@ -193,9 +190,7 @@ controller #(.DIFICULTY_WIDTH(COLOR_CODEFY_W), .DATA_WIDTH(COLOR_CODEFY_W), .ADD
     .enable_led(enable_led),
     .all_leds(all_leds),
     .load_seed(load_seed),
-    .sequence_indice(sequence_indice),
-    .match_indice(match_indice),
-    .mux_addr(addr_mux)
+    .mux_addr_sequence(mux_addr_sequence)
 );
 
 endmodule

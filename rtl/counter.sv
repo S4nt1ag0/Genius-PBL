@@ -23,9 +23,12 @@ module counter
             count <= 0;
         end
         else begin
-            if(enable)
+            if(enable) begin
                 count <= count+1;
-            else count <= count;
+            end
+            else begin
+                count <= count;
+            end
         end
                 
     end
