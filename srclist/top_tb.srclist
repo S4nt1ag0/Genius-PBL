@@ -1,5 +1,6 @@
 rtl/typedefs_pkg.sv
 rtl/seed_generate.sv
+rtl/button_processor.sv
 rtl/controller.sv
 rtl/counter.sv
 rtl/rng.sv

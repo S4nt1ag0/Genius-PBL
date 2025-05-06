@@ -31,7 +31,10 @@ import typedefs_pkg::*;
     input logic mode_button,
     input logic [COLOR_CODEFY_W-1:0] difficulty_button,
     input logic speed_button,
-    input logic [COLOR_CODEFY_W-1:0] player_button,
+    input logic button_color_green,
+    input logic button_color_red,
+    input logic button_color_blue,
+    input logic button_color_yellow,
     input logic start,
     output logic led_red,
     output logic led_green,
@@ -39,6 +42,8 @@ import typedefs_pkg::*;
     output logic led_yellow,
     output logic [ADDR_WIDTH-1:0] lcd_display
 );
+
+
 
 
 //memory
@@ -52,7 +57,10 @@ logic [ADDR_WIDTH-1:0] addr;
 logic mode;
 logic [COLOR_CODEFY_W-1:0] difficulty;
 logic speed;
+
+//player_input
 logic [COLOR_CODEFY_W-1:0] player_input;
+logic input_valid;
 
 //rng
 logic [COLOR_CODEFY_W-1:0] random_out;
@@ -79,6 +87,19 @@ logic load_ac;
 logic load_ir;
 logic load_pc;
 logic inc_pc;
+
+
+button_processor btn_processor (
+    .clk(clk),
+    .rst_n(rst_n),
+    .player_wr(player_wr),
+    .button_color_green(button_color_green),
+    .button_color_red(button_color_red),
+    .button_color_blue(button_color_blue),
+    .button_color_yellow(button_color_yellow),
+    .decoded_output(player_input),
+    .valid_press(input_valid)     
+);
 
 memory_module #(.ADDR_WIDTH(ADDR_WIDTH),.DATA_WIDTH(COLOR_CODEFY_W)) memory
 (
@@ -108,13 +129,6 @@ register speed_register(
     .enable(settings_wr),
     .out(speed)
 );
-
-register #(.DATA_WIDTH(COLOR_CODEFY_W)) player_input_register(
-    .data(player_button),
-    .enable(player_wr),
-    .out(player_input)
-);
-
 
 seed_generate #(.SEED_WIDTH(LFSR_WIDTH)) seed_gen (
     .clk(clk),

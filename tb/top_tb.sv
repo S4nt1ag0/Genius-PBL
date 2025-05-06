@@ -5,6 +5,7 @@ module top_tb;
   // Parameters
   parameter COLOR_CODEFY_W = 2;
   parameter ADDR_WIDTH = 5;
+  parameter LFSR_WIDTH = 16;
 
   // Inputs
   logic rst_n;
@@ -12,7 +13,10 @@ module top_tb;
   logic mode_button;
   logic [COLOR_CODEFY_W-1:0] difficulty_button;
   logic speed_button;
-  logic [COLOR_CODEFY_W-1:0] player_button;
+  logic button_color_green;
+  logic button_color_red;
+  logic button_color_blue;
+  logic button_color_yellow;
   logic start;
 
   // Outputs
@@ -22,21 +26,24 @@ module top_tb;
   logic led_yellow;
   logic [ADDR_WIDTH-1:0] lcd_display;
 
-  // Clock generation
+  // Clock generation (100MHz)
   initial clk = 0;
-  always #5 clk = ~clk; // 100MHz clock
+  always #5 clk = ~clk;
 
-  // Instantiate the DUT (Device Under Test)
+  // Instantiate the DUT
   top #(
     .COLOR_CODEFY_W(COLOR_CODEFY_W),
     .ADDR_WIDTH(ADDR_WIDTH)
-  ) dut (
+  )dut (
     .rst_n(rst_n),
     .clk(clk),
     .mode_button(mode_button),
     .difficulty_button(difficulty_button),
     .speed_button(speed_button),
-    .player_button(player_button),
+    .button_color_green(button_color_green),
+    .button_color_red(button_color_red),
+    .button_color_blue(button_color_blue),
+    .button_color_yellow(button_color_yellow),
     .start(start),
     .led_red(led_red),
     .led_green(led_green),
@@ -45,54 +52,97 @@ module top_tb;
     .lcd_display(lcd_display)
   );
 
-  // Task to simulate a button press
-  task press_button(input logic [COLOR_CODEFY_W-1:0] btn);
+  // Task to simulate a button press with edge detection
+  task press_color_button(input logic btn);
     begin
-      player_button = btn;
-      #10;
-      player_button = 0;
-      #10;
+      btn = 1;       // Press button
+      #30;           // Hold for enough cycles to be detected
+      btn = 0;       // Release button
+      #20;
     end
   endtask
 
   initial begin
     // Initialize inputs
     rst_n = 0;
-    mode_button = 0;          // 0 = follow mode
-    difficulty_button = 2'b01; // 16 steps
-    speed_button = 0;         // 0 = slow
-    player_button = 0;
+    mode_button = 0;
+    difficulty_button = 2'b01; // Medium difficulty
+    speed_button = 0;
+    button_color_green = 0;
+    button_color_red = 0;
+    button_color_blue = 0;
+    button_color_yellow = 0;
     start = 0;
 
-    // Reset
+    // Reset sequence
     #20;
     rst_n = 1;
+    #20;
 
-    // Simulate configuration phase
-    #10;
-    mode_button = 0; // follow mode
-    difficulty_button = 2'b01; // 16 steps
-    speed_button = 1; // fast
-    #10;
-
+    // Test case 1: Configuration
+    $display("Setting up game configuration...");
+    mode_button = 1;           // Set to mando eu mode
+    difficulty_button = 2'b10; // Hard difficulty
+    speed_button = 1;          // Fast speed
+    #30;
+    
     // Start the game
+    $display("Starting game...");
     start = 1;
-    #10;
+    #20;
     start = 0;
-
-    // Wait for sequence to be generated/displayed
     #100;
 
-    // Simulate user pressing buttons
-    // Example: pretend user presses red, green, blue, yellow
-    press_button(2'b00); // red
-    press_button(2'b01); // green
-    press_button(2'b10); // blue
-    press_button(2'b11); // yellow
-
-    // Wait and finish
+    // Wait for sequence display
+    $display("Waiting for sequence display...");
     #200;
+
+    // Test case 2: Correct sequence input
+    $display("Simulating correct sequence input...");
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_red);    // 01
+    #50;
+    press_color_button(button_color_blue);   // 10
+    #50;
+    press_color_button(button_color_yellow); // 11
+    #100;
+
+    // Test case 3: Wrong input (should lead to defeat)
+    $display("Simulating wrong input...");
+    press_color_button(button_color_red);    // Wrong color
+    #200;
+
+    // Restart game
+    $display("Restarting game...");
+    start = 1;
+    #20;
+    start = 0;
+    #100;
+
+    // Test case 4: Mixed inputs
+    $display("Simulating mixed inputs...");
+    press_color_button(button_color_green);
+    #30;
+    press_color_button(button_color_blue);
+    #30;
+    press_color_button(button_color_yellow);
+    #30;
+    press_color_button(button_color_red);
+    #100;
+
+    // End simulation
+    $display("Simulation complete");
+    #100;
     $finish;
+  end
+
+  // Monitoring
+  initial begin
+    $timeformat(-9, 2, " ns", 10);
+    $monitor("At %t: state=%s, score=%d, LEDs=%b%b%b%b", 
+             $time, dut.controller.state.name(), 
+             lcd_display, led_red, led_green, led_blue, led_yellow);
   end
 
 endmodule

@@ -59,8 +59,11 @@ module controller
             end
             SHOW_SEQUENCE: begin
                 if(match_index == sequence_index) begin 
-                    next_state = GET_PLAYER_INPUT;
+                    next_state = CLEAN_SEQUENCE;
                 end
+            end
+            CLEAN_SEQUENCE: begin
+                next_state = GET_PLAYER_INPUT;
             end
             GET_PLAYER_INPUT: begin 
                 if(player_input) next_state = COMPARISON;
@@ -119,9 +122,9 @@ module controller
                 mem_rd = 1;
                 inc_match_index = 1;
                 enable_led = 1;
-                if(match_index == sequence_index) begin 
-                    //rst_match = 0;
-                end
+            end
+            CLEAN_SEQUENCE: begin 
+                rst_match <= 0;
             end
             GET_PLAYER_INPUT: begin 
                 player_wr = 1;
