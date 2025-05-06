@@ -102,6 +102,10 @@ module top_tb;
     $display("Simulating correct sequence input...");
     press_color_button(button_color_green);  // 00
     #50;
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);  // 00
+    #50;
     press_color_button(button_color_red);    // 01
     #50;
     press_color_button(button_color_blue);   // 10
