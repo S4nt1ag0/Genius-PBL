@@ -1,8 +1,12 @@
 //------------------------------------------------------------------------------
 // controller (FSM)
 //------------------------------------------------------------------------------
-// This module performs the addition of two 4-bit numbers with a carry-in and 
-// produces a 4-bit sum and a carry-out.
+//This is a game controller finite state machine with 8 states that manages a sequence-matching game. 
+//It starts in IDLE, progresses through sequence display (GET_NEXT_SEQUENCE_ITEM, SHOW_SEQUENCE, CLEAN_SEQUENCE), 
+//then player input handling (GET_PLAYER_INPUT, COMPARISON), and finally evaluates results (EVALUATE, VICTORY/DEFEAT). 
+//The FSM controls memory operations, LED displays, score tracking, and game flow based on player inputs, difficulty settings, and sequence matching. 
+//It uses synchronous state transitions with asynchronous reset and generates various control signals (mem_rd, enable_led, etc.) depending on the current state. 
+//The state machine supports different game modes and difficulty levels while managing the complete game lifecycle from start to victory/defeat conditions.
 //
 // Author: Gustavo Santiago
 // Date  : Maio 2025
@@ -46,8 +50,6 @@ module controller
 
     state_t state = IDLE, next_state;
     
-    
-
     always_comb begin: process_next_state
         next_state = state;
         case (state)
@@ -116,7 +118,6 @@ module controller
             end
             GET_NEXT_SEQUENCE_ITEM: begin
                 mem_wr = 1;
-                //inc_sequence_index = 1;
                 mux_addr_sequence = 1;
             end
             SHOW_SEQUENCE: begin

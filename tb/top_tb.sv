@@ -59,7 +59,6 @@ module top_tb;
       #30;           // Hold for enough cycles to be detected
       btn = 0;       // Release button
       #20;
-      $display("Button Pressed...");
     end
   endtask
 
@@ -100,125 +99,70 @@ module top_tb;
 
     // Test case 2: Correct sequence input
     $display("Simulating correct sequence input...");
+
     //Sequencia: Green
-    press_color_button(button_color_green);  // 00
+    press_color_button(button_color_green);  #100;
 
-    #100;
     //Sequencia: Green -> Green
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);  // 00
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #100;
 
-    #100;
     //Sequencia: Green -> Green -> Green
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);    // 00
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #100;
 
-    #100;
     //Sequencia: Green -> Green -> Green -> Red
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);    // 00
-    #50;
-    press_color_button(button_color_red);  // 01
-
-    #100;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_red);    #100;
 
     //Sequencia: Green -> Green -> Green -> Red -> Green
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);   // 00
-    #50;
-    press_color_button(button_color_red);  // 01
-    #50;
-    press_color_button(button_color_green);     // 00
-
-    #100;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_red);    #50;
+    press_color_button(button_color_green);  #100;
 
 
     //Sequencia: Green -> Green -> Green -> Red -> Green -> Red
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);    // 00
-    #50;
-    press_color_button(button_color_red);   // 01
-    #50;
-    press_color_button(button_color_green);     // 00
-    #50;
-    press_color_button(button_color_red);  // 01
-
-    #100;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_red);    #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_red);    #100;
 
     //Sequencia: Green -> Green -> Green -> Red -> Green -> Red -> Blue
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);    // 00
-    #50;
-    press_color_button(button_color_red);   // 01
-    #50;
-    press_color_button(button_color_green);     // 00
-    #50;
-    press_color_button(button_color_red);  // 01
-    #50;
-    press_color_button(button_color_blue);     // 00
-
-    #100;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_red);    #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_red);    #50;
+    press_color_button(button_color_blue);   #100;
 
     //Sequencia: Green -> Green -> Green -> Red -> Green -> Red -> Blue -> Green
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);    // 00
-    #50;
-    press_color_button(button_color_red);   // 01
-    #50;
-    press_color_button(button_color_green);     // 00
-    #50;
-    press_color_button(button_color_red);  // 01
-    #50;
-    press_color_button(button_color_blue);     // 10
-    #50;
-    press_color_button(button_color_green);     // 00
-
-    #100;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_red);    #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_red);    #50;
+    press_color_button(button_color_blue);   #50;
+    press_color_button(button_color_green);  #100;
 
     //Sequencia: Green -> Green -> Green -> Red -> Green -> Red -> Blue -> Green -> Green
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);  // 00
-    #50;
-    press_color_button(button_color_green);    // 00
-    #50;
-    press_color_button(button_color_red);   // 01
-    #50;
-    press_color_button(button_color_green);     // 00
-    #50;
-    press_color_button(button_color_red);  // 01
-    #50;
-    press_color_button(button_color_blue);     // 10
-    #50;
-    press_color_button(button_color_green);     // 00
-    #50;
-    press_color_button(button_color_green);     // 00
-
-    #100;
-
-    // Test case 3: Wrong input (should lead to defeat)
-    $display("Simulating wrong input...");
-    press_color_button(button_color_red);    // Wrong color
-    #200;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_red);    #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_red);    #50;
+    press_color_button(button_color_blue);   #50;
+    press_color_button(button_color_green);  #50;
+    press_color_button(button_color_green);  #100;
 
     // Restart game
     $display("Restarting game...");
@@ -227,15 +171,9 @@ module top_tb;
     start = 0;
     #100;
 
-    // Test case 4: Mixed inputs
-    $display("Simulating mixed inputs...");
+    // Test case 3: Wrong input (should lead to defeat)
+    $display("Simulating wrong input...");
     press_color_button(button_color_green);
-    #30;
-    press_color_button(button_color_blue);
-    #30;
-    press_color_button(button_color_yellow);
-    #30;
-    press_color_button(button_color_red);
     #100;
 
     // End simulation
