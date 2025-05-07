@@ -83,7 +83,7 @@ module top_tb;
     // Test case 1: Configuration
     $display("Setting up game configuration...");
     mode_button = 1;           // Set to mando eu mode
-    difficulty_button = 2'b10; // Hard difficulty
+    difficulty_button = 2'b00; // Hard difficulty
     speed_button = 1;          // Fast speed
     #30;
     
@@ -100,17 +100,119 @@ module top_tb;
 
     // Test case 2: Correct sequence input
     $display("Simulating correct sequence input...");
+    //Sequencia: Green
+    press_color_button(button_color_green);  // 00
+
+    #100;
+    //Sequencia: Green -> Green
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);  // 00
+
+    #100;
+    //Sequencia: Green -> Green -> Green
     press_color_button(button_color_green);  // 00
     #50;
     press_color_button(button_color_green);  // 00
     #50;
+    press_color_button(button_color_green);    // 00
+
+    #100;
+    //Sequencia: Green -> Green -> Green -> Red
     press_color_button(button_color_green);  // 00
     #50;
-    press_color_button(button_color_red);    // 01
+    press_color_button(button_color_green);  // 00
     #50;
-    press_color_button(button_color_blue);   // 10
+    press_color_button(button_color_green);    // 00
     #50;
-    press_color_button(button_color_yellow); // 11
+    press_color_button(button_color_red);  // 01
+
+    #100;
+
+    //Sequencia: Green -> Green -> Green -> Red -> Green
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);   // 00
+    #50;
+    press_color_button(button_color_red);  // 01
+    #50;
+    press_color_button(button_color_green);     // 00
+
+    #100;
+
+
+    //Sequencia: Green -> Green -> Green -> Red -> Green -> Red
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);    // 00
+    #50;
+    press_color_button(button_color_red);   // 01
+    #50;
+    press_color_button(button_color_green);     // 00
+    #50;
+    press_color_button(button_color_red);  // 01
+
+    #100;
+
+    //Sequencia: Green -> Green -> Green -> Red -> Green -> Red -> Blue
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);    // 00
+    #50;
+    press_color_button(button_color_red);   // 01
+    #50;
+    press_color_button(button_color_green);     // 00
+    #50;
+    press_color_button(button_color_red);  // 01
+    #50;
+    press_color_button(button_color_blue);     // 00
+
+    #100;
+
+    //Sequencia: Green -> Green -> Green -> Red -> Green -> Red -> Blue -> Green
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);    // 00
+    #50;
+    press_color_button(button_color_red);   // 01
+    #50;
+    press_color_button(button_color_green);     // 00
+    #50;
+    press_color_button(button_color_red);  // 01
+    #50;
+    press_color_button(button_color_blue);     // 10
+    #50;
+    press_color_button(button_color_green);     // 00
+
+    #100;
+
+    //Sequencia: Green -> Green -> Green -> Red -> Green -> Red -> Blue -> Green -> Green
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);  // 00
+    #50;
+    press_color_button(button_color_green);    // 00
+    #50;
+    press_color_button(button_color_red);   // 01
+    #50;
+    press_color_button(button_color_green);     // 00
+    #50;
+    press_color_button(button_color_red);  // 01
+    #50;
+    press_color_button(button_color_blue);     // 10
+    #50;
+    press_color_button(button_color_green);     // 00
+    #50;
+    press_color_button(button_color_green);     // 00
+
     #100;
 
     // Test case 3: Wrong input (should lead to defeat)

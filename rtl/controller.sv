@@ -78,7 +78,7 @@ module controller
                 next_state = IDLE;
             EVALUATE: begin
                 next_state = VICTORY;
-                if(sequence_index < difficulty) next_state = GET_NEXT_SEQUENCE_ITEM;
+                if(sequence_index < (8<< difficulty)) next_state = GET_NEXT_SEQUENCE_ITEM;
             end
             VICTORY: next_state = IDLE;
         endcase
